@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>House Price Prediction</h2>
+
+    <div class="form-group">
+        <input type="number" id="MedInc" placeholder="Median Income">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="HouseAge" placeholder="House Age">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="AveRooms" placeholder="Average Rooms">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="AveBedrms" placeholder="Average Bedrooms">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="Population" placeholder="Population">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="AveOccup" placeholder="Average Occupancy">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="Latitude" placeholder="Latitude">
+    </div>
+
+    <div class="form-group">
+        <input type="number" id="Longitude" placeholder="Longitude">
+    </div>
+
+    <button onclick="predictPrice()">Predict Price</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function predictPrice() {
+
+            const features = [
+                parseFloat(document.getElementById("MedInc").value),
+                parseFloat(document.getElementById("HouseAge").value),
+                parseFloat(document.getElementById("AveRooms").value),
+                parseFloat(document.getElementById("AveBedrms").value),
+                parseFloat(document.getElementById("Population").value),
+                parseFloat(document.getElementById("AveOccup").value),
+                parseFloat(document.getElementById("Latitude").value),
+                parseFloat(document.getElementById("Longitude").value)
+            ];
+
+            try {
+
+                const response = await fetch(
+                    "http://127.0.0.1:5000/predict",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            features: features
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                document.getElementById("result").innerHTML =
+                    "Predicted House Price: $" +
+                    data.predicted_price.toFixed(2);
+
+            } catch (error) {
+                document.getElementById("result").innerHTML =
+                    "Error connecting to API";
+            }
+        }
+    </script>
+
+</body>
+</html>
