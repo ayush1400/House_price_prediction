@@ -27,6 +27,10 @@ jobs:
             docker stop house-price-container || true
             docker rm house-price-container || true
 
+            # remove any other container occupying port 5000
+            docker ps -q --filter "publish=5000" | xargs -r docker stop
+            docker ps -aq --filter "publish=5000" | xargs -r docker rm
+
             docker build -t house-price-app .
 
             docker run -d \
