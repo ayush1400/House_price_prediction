@@ -43,7 +43,7 @@ htmlcov/
 # Flask
 instance/
 .webassets-cache
-
+*.pem
 # Cache
 .pytest_cache/
 .mypy_cache/
