@@ -32,9 +32,7 @@ build/
 dist/
 *.egg-info/
 
-# Model Files (optional)
-*.pkl
-*.joblib
+    
 
 # Test Coverage
 .coverage
