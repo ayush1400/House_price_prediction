@@ -1,4 +1,4 @@
-name: Deploy House Price App to EC2
+name: Deploy to EC2
 
 on:
   push:
@@ -10,25 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/house
+            cd ~/House_price_prediction
 
             git pull origin main
 
             docker stop house-price-container || true
             docker rm house-price-container || true
-            docker rmi house-price-app || true
 
             docker build -t house-price-app .
 
             docker run -d \
-              --restart unless-stopped \
               --name house-price-container \
               -p 5000:5000 \
               house-price-app
